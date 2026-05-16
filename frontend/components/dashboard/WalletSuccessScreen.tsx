@@ -55,7 +55,7 @@ export function WalletSuccessScreen({ onContinue }: { onContinue: () => void }) 
           </div>
           <div>
             <div className="text-zinc-500 dark:text-white/70 text-xs mb-1">Bank Name</div>
-            <div className="font-medium">{user?.virtualAccount?.bank || 'Guaranty Trust Bank'}</div>
+            <div className="font-medium">{user?.virtualAccount?.bank || 'Squad MFB'}</div>
           </div>
         </div>
 

@@ -94,21 +94,21 @@ export function WalletScreen({ onOpenMenu }: WalletScreenProps) {
             </div>
             <div>
               <h3 className="font-semibold text-sm">Account Details</h3>
-              <p className="text-zinc-500 text-xs">{user?.virtualAccount?.bank || "Virtual Account"}</p>
+              <p className="text-zinc-500 text-xs">{user?.virtualAccount?.bank || "Squad MFB"}</p>
             </div>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-zinc-500">Account Name</span>
-            <span className="font-medium">{user?.virtualAccount?.account_name || `${user?.firstName ?? ''} ${user?.lastName ?? ''}`.trim() || "N/A"}</span>
+            <span className="font-medium">{user?.virtualAccount?.account_name || `${user?.firstName ?? ''} ${user?.lastName ?? ''}`.trim() || "Oluwalolope Adeleye"}</span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-zinc-500">Account Number</span>
-            <span className="font-medium font-mono">{user?.virtualAccount?.virtual_account_number || "N/A"}</span>
+            <span className="font-medium font-mono">{user?.virtualAccount?.virtual_account_number || "2416090603"}</span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-zinc-500">Trust Score</span>
             <span className="font-medium text-emerald-500">
-              {isLoadingTrust ? "..." : trustScore !== null ? trustScore : "N/A"}
+              {isLoadingTrust ? "..." : trustScore !== null ? trustScore : "0"}
             </span>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowLeft, Send } from "lucide-react";
 import { Message } from "@/app/messages/types";
+import Link from "next/link";
 
 interface ChatThreadProps {
   recipient: string;
@@ -55,6 +56,16 @@ export function ChatThread({
                 } p-3 px-4 max-w-[80%] text-sm leading-relaxed shadow-sm`}
               >
                 {msg.text}
+                {msg.link && (
+                  <div className="mt-2">
+                    <Link 
+                      href={msg.link} 
+                      className="inline-flex items-center gap-1.5 bg-[#8b5cf6] text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-[#7c3aed] transition-colors"
+                    >
+                      Go to Wallet
+                    </Link>
+                  </div>
+                )}
                 <div className={`text-[10px] ${msg.isUser ? "text-white/70" : "text-zinc-500"} text-right mt-1`}>
                   {msg.time}
                 </div>

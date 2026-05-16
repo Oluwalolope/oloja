@@ -90,6 +90,17 @@ function MessagesContent() {
                 text: "[Automated Message] Thanks for your interest! We have received your message and will review your profile. We will get back to you shortly.",
                 time: "Just now",
                 isUser: false
+              },
+              {
+                text: "Great news! We have reviewed your profile and agreed to hire you for this job.",
+                time: "Just now",
+                isUser: false
+              },
+              {
+                text: "Please proceed to secure the payment and link it to your wallet.",
+                time: "Just now",
+                isUser: false,
+                link: "/wallet"
               }
             ];
             
