@@ -56,7 +56,7 @@ export default function AppFlow() {
   const [gender, setGender] = useState<Gender>(null);
   const [address, setAddress] = useState("");
   const [languages, setLanguages] = useState<string[]>([]);
-  const [skills, setSkills] = useState<string[]>([]);
+  const [skills, setSkills] = useState<string>('');
   const [experience, setExperience] = useState<ExperienceLevel>(null);
   const [jobType, setJobType] = useState<JobType>(null);
   const [workType, setWorkType] = useState<WorkType>(null);

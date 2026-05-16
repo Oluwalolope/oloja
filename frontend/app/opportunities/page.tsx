@@ -34,7 +34,12 @@ export default function OpportunitiesPage() {
         setOpportunities(data.matches || []);
       } catch (err: any) {
         console.error(err);
-        setError(err.message || 'Failed to load opportunities');
+        try {
+          const { DUMMY_OPPORTUNITIES } = await import("@/data/dummyOpportunities");
+          setOpportunities(DUMMY_OPPORTUNITIES);
+        } catch (e) {
+          setError(err.message || 'Failed to load opportunities');
+        }
       } finally {
         setIsLoading(false);
       }
