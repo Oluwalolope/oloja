@@ -30,8 +30,11 @@ export class OnboardUserResponseDto {
   @ApiProperty({ enum: ['find_jobs', 'hire_services'], required: false })
   role?: string | null
 
-  @ApiProperty({ example: ['plumbing', 'tiling'], type: [String] })
-  skills: string[]
+  @ApiProperty({
+    example:
+      'I have 5 years of plumbing experience and also do tiling and general repairs.',
+  })
+  skills: string
 
   @ApiProperty({ example: ['English', 'Yoruba'], type: [String] })
   languages: string[]
@@ -39,7 +42,10 @@ export class OnboardUserResponseDto {
   @ApiProperty({ example: 'Lagos' })
   location: string
 
-  @ApiProperty({ enum: ['beginner', 'intermediate', 'expert'], required: false })
+  @ApiProperty({
+    enum: ['beginner', 'intermediate', 'expert'],
+    required: false,
+  })
   experience?: string | null
 
   @ApiProperty({ type: VirtualAccountDto })

@@ -20,7 +20,7 @@ model User {
   brandName    String?
   location     String
   languages    String[]
-  skills       String[]
+  skills       String
   experience   String?
   jobType      String?
   workType     String?

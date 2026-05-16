@@ -36,11 +36,18 @@ export class OnboardUserDto {
   @IsString()
   bvn: string
 
-  @ApiProperty({ example: '01/01/1990', description: 'Date of birth MM/DD/YYYY' })
+  @ApiProperty({
+    example: '01/01/1990',
+    description: 'Date of birth MM/DD/YYYY',
+  })
   @IsString()
   dob: string
 
-  @ApiProperty({ example: '1', description: '1 = Male, 2 = Female', enum: ['1', '2'] })
+  @ApiProperty({
+    example: '1',
+    description: '1 = Male, 2 = Female',
+    enum: ['1', '2'],
+  })
   @IsEnum(['1', '2'])
   gender: '1' | '2'
 
@@ -70,9 +77,12 @@ export class OnboardUserDto {
   @IsArray()
   languages: string[]
 
-  @ApiProperty({ example: ['plumbing', 'tiling'], type: [String] })
-  @IsArray()
-  skills: string[]
+  @ApiProperty({
+    example:
+      'I have 5 years of plumbing experience and also do tiling and general repairs.',
+  })
+  @IsString()
+  skills: string
 
   @ApiProperty({
     enum: ['beginner', 'intermediate', 'expert'],

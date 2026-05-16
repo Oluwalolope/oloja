@@ -27,7 +27,7 @@ export class MatchingService {
   }
 
   async match(
-    skills: string[],
+    skills: string,
     location: string,
     languages: string[],
     opportunities: any[],
@@ -42,12 +42,18 @@ export class MatchingService {
 
   // ── Stage 1: stemmed pre-filter ───────────────────────────────────────────
 
-  private _preFilter(skills: string[], location: string, opportunities: any[]): any[] {
-    const userStems = new Set(skills.map((s) => this._stem(s)))
+  private _preFilter(
+    skills: string,
+    location: string,
+    opportunities: any[],
+  ): any[] {
+    const userStems = new Set(this._tokenize(skills).map((s) => this._stem(s)))
 
     return opportunities
       .map((opp) => {
-        const oppStems = new Set(((opp.skills ?? []) as string[]).map((s) => this._stem(s)))
+        const oppStems = new Set(
+          ((opp.skills ?? []) as string[]).map((s) => this._stem(s)),
+        )
         const skillScore = this._stemmedJaccard(userStems, oppStems)
         const locScore = this._locationScore(location, opp.location)
         // Keep anything with any skill overlap, or strong location match
@@ -57,6 +63,17 @@ export class MatchingService {
       .sort((a, b) => b.preScore - a.preScore)
       .slice(0, SHORTLIST_LIMIT)
       .map(({ opp }) => opp)
+  }
+
+  private _tokenize(bio: string): string[] {
+    return [
+      ...new Set(
+        bio
+          .toLowerCase()
+          .split(/\W+/)
+          .filter((t) => t.length >= 3),
+      ),
+    ]
   }
 
   private _stemmedJaccard(a: Set<string>, b: Set<string>): number {
@@ -72,10 +89,23 @@ export class MatchingService {
   private _stem(word: string): string {
     const w = word.toLowerCase().trim()
     const suffixes = [
-      'ication', 'ational', 'iness',
-      'ation', 'tion', 'ment', 'ness',
-      'ing', 'ian', 'ist', 'ity', 'ery', 'ery', 'ry',
-      'er', 'ed', 'al',
+      'ication',
+      'ational',
+      'iness',
+      'ation',
+      'tion',
+      'ment',
+      'ness',
+      'ing',
+      'ian',
+      'ist',
+      'ity',
+      'ery',
+      'ery',
+      'ry',
+      'er',
+      'ed',
+      'al',
     ]
     for (const suffix of suffixes) {
       if (w.endsWith(suffix) && w.length - suffix.length >= 4) {
@@ -88,7 +118,7 @@ export class MatchingService {
   // ── Stage 2: Claude re-rank ───────────────────────────────────────────────
 
   private async _claudeMatch(
-    skills: string[],
+    skills: string,
     location: string,
     languages: string[],
     opportunities: any[],
@@ -96,7 +126,7 @@ export class MatchingService {
     const prompt = `You are a job matching engine for informal workers in Nigeria.
 
 User profile:
-- Skills: ${skills.join(', ')}
+- Skills bio: ${skills}
 - Location: ${location}
 - Languages: ${languages.join(', ')}
 
@@ -120,8 +150,11 @@ Return ONLY a valid JSON array with one object per opportunity in the same order
     })
 
     const text = (message.content[0] as { type: string; text: string }).text
-    const parsed: { id: string; matchScore: number; matchReasons: MatchReason[] }[] =
-      JSON.parse(text)
+    const parsed: {
+      id: string
+      matchScore: number
+      matchReasons: MatchReason[]
+    }[] = JSON.parse(text)
 
     const scoreMap = new Map(parsed.map((p) => [p.id, p]))
 
@@ -140,7 +173,7 @@ Return ONLY a valid JSON array with one object per opportunity in the same order
   // ── Algorithmic fallback ──────────────────────────────────────────────────
 
   private _algorithmicMatch(
-    skills: string[],
+    skills: string,
     location: string,
     languages: string[],
     opportunities: any[],
@@ -148,13 +181,20 @@ Return ONLY a valid JSON array with one object per opportunity in the same order
     return opportunities
       .map((opp) => ({
         ...opp,
-        matchScore: Math.round(this._score(skills, location, languages, opp) * 100),
+        matchScore: Math.round(
+          this._score(skills, location, languages, opp) * 100,
+        ),
         matchReasons: [],
       }))
       .sort((a, b) => b.matchScore - a.matchScore)
   }
 
-  private _score(skills: string[], location: string, languages: string[], opp: any): number {
+  private _score(
+    skills: string,
+    location: string,
+    languages: string[],
+    opp: any,
+  ): number {
     return (
       0.55 * this._skillOverlap(skills, opp.skills) +
       0.25 * this._locationScore(location, opp.location) +
@@ -162,9 +202,9 @@ Return ONLY a valid JSON array with one object per opportunity in the same order
     )
   }
 
-  private _skillOverlap(a: string[], b: string[]): number {
-    if (!a.length || !b.length) return 0
-    const aStems = new Set(a.map((s) => this._stem(s)))
+  private _skillOverlap(bio: string, b: string[]): number {
+    if (!bio || !b.length) return 0
+    const aStems = new Set(this._tokenize(bio).map((s) => this._stem(s)))
     const bStems = new Set(b.map((s) => this._stem(s)))
     return this._stemmedJaccard(aStems, bStems)
   }
